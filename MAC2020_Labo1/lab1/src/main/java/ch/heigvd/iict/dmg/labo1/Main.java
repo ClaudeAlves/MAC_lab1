@@ -5,8 +5,15 @@ import ch.heigvd.iict.dmg.labo1.parsers.CACMParser;
 import ch.heigvd.iict.dmg.labo1.queries.QueriesPerformer;
 import ch.heigvd.iict.dmg.labo1.similarities.MySimilarity;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.StopAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.shingle.ShingleAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.similarities.Similarity;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 public class Main {
 
@@ -18,13 +25,16 @@ public class Main {
 		// TODO student "Tuning the Lucene Score"
 //		Similarity similarity = null;//new MySimilarity();
 		Similarity similarity = new MySimilarity();
-		
+
+		long before = System.currentTimeMillis();
 		CACMIndexer indexer = new CACMIndexer(analyser, similarity);
 		indexer.openIndex();
 		CACMParser parser = new CACMParser("documents/cacm.txt", indexer);
 		parser.startParsing();
 		indexer.finalizeIndex();
-		
+		long after = System.currentTimeMillis();
+
+		System.out.println(after - before);
 		QueriesPerformer queriesPerformer = new QueriesPerformer(analyser, similarity);
 
 		// Section "Reading Index"
@@ -62,9 +72,20 @@ public class Main {
 		//
 		// For the next part "Using different Analyzers" modify this method
 		// and return the appropriate Analyzers asked.
-		StandardAnalyzer analyzer = new StandardAnalyzer();
+		//StandardAnalyzer analyzer = new StandardAnalyzer();
+		//WhitespaceAnalyzer analyzer = new WhitespaceAnalyzer();
+		//EnglishAnalyzer analyzer = new EnglishAnalyzer();
+		//ShingleAnalyzerWrapper analyzer = new ShingleAnalyzerWrapper(2,2);
+		//ShingleAnalyzerWrapper analyzer = new ShingleAnalyzerWrapper(2,3);
 
-		return analyzer; // TODO student DONE?
+		Path path = FileSystems.getDefault().getPath("common_words.txt");
+		try {
+			 return new StopAnalyzer(path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null; // TODO student DONE?
 	}
 
 }
