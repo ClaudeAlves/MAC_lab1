@@ -53,13 +53,23 @@ public class CACMIndexer implements ParserListener {
 		// parameters. You job is to use the right Field and FieldType
 		// for these parameters.
 		// DONE ?
-		doc.add(new LongPoint("id", id));
+		// id
+		if(id != null) {
+			doc.add(new LongPoint("id", id));
+		}
 		String[] authorsSplit = authors.split(";");
+		// split the authors
 		for (String s : authorsSplit) {
 			doc.add(new StringField("authors", s, Field.Store.YES));
 		}
-		doc.add(new TextField("title", title, Field.Store.YES));
-		doc.add(new TextField("summary", summary, Field.Store.YES));
+		// title
+		if(title != null) {
+			doc.add(new TextField("title", title, Field.Store.YES));
+		}
+		// summary
+		if(summary != null) {
+			doc.add(new TextField("summary", summary, Field.Store.YES));
+		}
 
 		try {
 			this.indexWriter.addDocument(doc);

@@ -64,7 +64,7 @@ public class Main {
 		// and return the appropriate Analyzers asked.
 		StandardAnalyzer analyzer = new StandardAnalyzer();
 
-		return analyzer; // TODO student
+		return analyzer; // TODO student DONE?
 	}
 
 }
