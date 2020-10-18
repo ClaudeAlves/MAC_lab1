@@ -65,7 +65,7 @@
 
 6. #### Does it matter whether stemming occurs before or after stopword removal? Consider this as a general question.
 
-  Yes it diffrent if we make it before because we could stemm a stopword for example *was* into *wa* and it would be suppress by the stopword removal. And additionally it will have the same root as other words and would confused the search.
+  Yes it different if we make it before because we could stemm a stopword for example *was* into *wa* and it would be suppress by the stopword removal. And additionally it will have the same root as other words and would confused the search.
 
 ## 3 Indexing and Searching the CACM collection
 
@@ -87,9 +87,9 @@
 
 1. #### Explain the difference of these five analyzers.
 
-   **Whitespace:** This analyzer with simply split the document based on whitespace and nothing more. It won't lower case and it will keep all ponctuations.
+   **Whitespace:** This analyzer with simply split the document based on whitespace and nothing more. It won't lower case and it will keep all punctuations.
 
-   **English:** It will keep the english terms and will apply some filter. It will lower case, stem and remove stop word like 'of', 'for', 'a' .
+   **English:** It will keep the English terms and will apply some filter. It will lower case, stem and remove stop word like 'of', 'for', 'a' .
 
    **Shingle 1-2:** It will tokenize the text and make terms with single or 2 words in it. It lower case the terms.
 
@@ -201,7 +201,7 @@
 
 4. #### Make 3 concluding statements bases on the above observations.
 	
-	1. the number of documents isn't analyzer dependant.
+	1. the number of documents isn't analyzer dependent.
 	2. the proportion of summary terms is more or less the same every time
 	3. the top 10 terms in summary varies depending of the analyzer
 	
@@ -247,117 +247,189 @@
        }
    ```
 
-   ### 3.4 Searching
+### 3.4 Searching
 
-   ```java
-   public void query(String q) {
-   
-           // See "Searching" section
-           QueryParser queryParser = new QueryParser("summary", analyzer);
-           Query query = null;
-           try {
-               query = queryParser.parse(q);
-           } catch (ParseException e) {
-               e.printStackTrace();
-           }
-   
-           System.out.println("Searching for [" + q + "]");
-   
-           try {
-               // search query
-               ScoreDoc[] hits = indexSearcher.search(query, 1000).scoreDocs;
-               // retrieve results
-               for (ScoreDoc hit : hits) {
-                   Document doc = indexSearcher.doc(hit.doc);
-                   System.out.println(doc.get("id") + ": " + doc.get("title") + " (" +
-                           hit.score + ")");
-               }
-               System.out.println("Results found: " + hits.length);
-               System.out.println();
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-   
-   
-       }
-   ```
+```java
+public void query(String q) {
 
-   #### 1. Publications containing the term “Information Retrieval”
+        // See "Searching" section
+        QueryParser queryParser = new QueryParser("summary", analyzer);
+        Query query = null;
+        try {
+            query = queryParser.parse(q);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-   *Searching for ["Information Retrieval"]*
-   1935: Randomized Binary Search Technique (1.529259)
-   891: Everyman's Information Retrieval System (1.4450139)
-   1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (1.4450139)
-   1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (1.2743825)
-   2519: On the Problem of Communicating Complex Information (1.1527222)
-   2516: Hierarchical Storage in Information Retrieval (0.9871324)
-   2307: Dynamic Document Processing (0.92724943)
-   2795: Sentence Paraphrasing from a Conceptual Base (0.9011245)
-   2990: Effective Information Retrieval Using Term Accuracy (0.87709016)
-   2451: Design of Tree Structures for Efficient Querying (0.81509775)
+        System.out.println("Searching for [" + q + "]");
 
-   **Results found: 11**
+        try {
+            // search query
+            ScoreDoc[] hits = indexSearcher.search(query, 1000).scoreDocs;
+            // retrieve results
+            for (ScoreDoc hit : hits) {
+                Document doc = indexSearcher.doc(hit.doc);
+                System.out.println(doc.get("id") + ": " + doc.get("title") + " (" +
+                        hit.score + ")");
+            }
+            System.out.println("Results found: " + hits.length);
+            System.out.println();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-   #### 2. Publications containing both “Information” and “Retrieval”.
 
-   *Searching for [Information AND Retrieval]*
-   1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (1.7697731)
-   891: Everyman's Information Retrieval System (1.6287744)
-   3134: The Use of Normal Multiplication Tablesfor Information Storage and Retrieval (1.5548403)
-   1935: Randomized Binary Search Technique (1.5292588)
-   2307: Dynamic Document Processing (1.4392829)
-   1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (1.436444)
-   1032: Theoretical Considerations in Information Retrieval Systems (1.4117906)
-   2519: On the Problem of Communicating Complex Information (1.3600239)
-   1681: Easy English,a Language for InformationRetrieval Through a Remote Typewriter Console (1.3113353)
-   2990: Effective Information Retrieval Using Term Accuracy (1.2403991)
+    }
+```
 
-   **Results found: 23**
+#### 1. Publications containing the term “Information Retrieval”
 
-   #### 3. Publications containing at least the term “Retrieval” and, possibly “Information” but not “Database”.
+*Searching for ["Information Retrieval"]*
+891: Everyman's Information Retrieval System (3.5482824)
+1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (3.5482824)
+1935: Randomized Binary Search Technique (3.334264)
+1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (3.286451)
+2519: On the Problem of Communicating Complex Information (2.830918)
+2516: Hierarchical Storage in Information Retrieval (2.511626)
+2307: Dynamic Document Processing (2.377547)
+2795: Sentence Paraphrasing from a Conceptual Base (2.315736)
+2990: Effective Information Retrieval Using Term Accuracy (2.257058)
+2451: Design of Tree Structures for Efficient Querying (2.0976045)
 
-   *Searching for [(+Information Retrieval) NOT Database]*
-   1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (1.7697731)
-   891: Everyman's Information Retrieval System (1.6287744)
-   3134: The Use of Normal Multiplication Tablesfor Information Storage and Retrieval (1.5548403)
-   1935: Randomized Binary Search Technique (1.5292588)
-   2307: Dynamic Document Processing (1.4392829)
-   1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (1.436444)
-   1032: Theoretical Considerations in Information Retrieval Systems (1.4117906)
-   2519: On the Problem of Communicating Complex Information (1.3600239)
-   1681: Easy English,a Language for InformationRetrieval Through a Remote Typewriter Console (1.3113353)
-   2990: Effective Information Retrieval Using Term Accuracy (1.2403991)
+**Results found: 11**
 
-   **Results found: 149**
+#### 2. Publications containing both “Information” and “Retrieval”.
 
-   #### 4. Publications containing a term starting with “Info”.
+*Searching for [Information AND Retrieval]*
+1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (4.0519514)
+891: Everyman's Information Retrieval System (3.845176)
+3134: The Use of Normal Multiplication Tablesfor Information Storage and Retrieval (3.6613934)
+1032: Theoretical Considerations in Information Retrieval Systems (3.613603)
+1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (3.6011014)
+2307: Dynamic Document Processing (3.5647495)
+1935: Randomized Binary Search Technique (3.3342643)
+1681: Easy English,a Language for InformationRetrieval Through a Remote Typewriter Console (3.2606215)
+2519: On the Problem of Communicating Complex Information (3.217997)
+2990: Effective Information Retrieval Using Term Accuracy (3.146757)
 
-   *Searching for [Info\*]*
-   222: Coding Isomorphisms (1.0)
-   272: A Storage Allocation Scheme for ALGOL 60 (1.0)
-   396: Automation of Program  Debugging (1.0)
-   397: A Card Format for Reference Files in Information Processing (1.0)
-   409: CL-1, An Environment for a Compiler (1.0)
-   440: Record Linkage (1.0)
-   483: On the Nonexistence of a Phrase Structure Grammar for ALGOL 60 (1.0)
-   616: An Information Algebra - Phase I Report-LanguageStructure Group of the CODASYL Development Committee (1.0)
-   644: A String Language for Symbol Manipulation Based on ALGOL 60 (1.0)
-   655: COMIT as an IR Language (1.0)
+**Results found: 23**
 
-   **Results found: 193**
+#### 3. Publications containing at least the term “Retrieval” and, possibly “Information” but not “Database”.
 
-   #### 5. Publications containing the term “Information” close to “Retrieval” (max distance 5).
+*Searching for [(+Information Retrieval) NOT Database]*
+1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (4.0519514)
+891: Everyman's Information Retrieval System (3.845176)
+3134: The Use of Normal Multiplication Tablesfor Information Storage and Retrieval (3.6613934)
+1032: Theoretical Considerations in Information Retrieval Systems (3.613603)
+1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (3.6011014)
+2307: Dynamic Document Processing (3.5647495)
+1935: Randomized Binary Search Technique (3.3342643)
+1681: Easy English,a Language for InformationRetrieval Through a Remote Typewriter Console (3.2606215)
+2519: On the Problem of Communicating Complex Information (3.217997)
+2990: Effective Information Retrieval Using Term Accuracy (3.146757)
 
-   *Searching for ["Information Retrieval"~5]*
-   1935: Randomized Binary Search Technique (1.529259)
-   891: Everyman's Information Retrieval System (1.4450139)
-   1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (1.4450139)
-   1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (1.2743825)
-   2519: On the Problem of Communicating Complex Information (1.1527222)
-   2307: Dynamic Document Processing (1.135644)
-   2516: Hierarchical Storage in Information Retrieval (0.9871324)
-   2795: Sentence Paraphrasing from a Conceptual Base (0.9011245)
-   2990: Effective Information Retrieval Using Term Accuracy (0.87709016)
-   2451: Design of Tree Structures for Efficient Querying (0.81509775)
+**Results found: 149**
 
-   **Results found: 15**
+#### 4. Publications containing a term starting with “Info”.
+
+*Searching for [Info\*]*
+222: Coding Isomorphisms (1.0)
+272: A Storage Allocation Scheme for ALGOL 60 (1.0)
+396: Automation of Program  Debugging (1.0)
+397: A Card Format for Reference Files in Information Processing (1.0)
+409: CL-1, An Environment for a Compiler (1.0)
+440: Record Linkage (1.0)
+483: On the Nonexistence of a Phrase Structure Grammar for ALGOL 60 (1.0)
+616: An Information Algebra - Phase I Report-LanguageStructure Group of the CODASYL Development Committee (1.0)
+644: A String Language for Symbol Manipulation Based on ALGOL 60 (1.0)
+655: COMIT as an IR Language (1.0)
+
+**Results found: 193**
+
+#### 5. Publications containing the term “Information” close to “Retrieval” (max distance 5).
+
+*Searching for ["Information Retrieval"~5]*
+891: Everyman's Information Retrieval System (3.5482824)
+1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (3.5482824)
+1935: Randomized Binary Search Technique (3.334264)
+1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (3.286451)
+2307: Dynamic Document Processing (2.9471455)
+2519: On the Problem of Communicating Complex Information (2.830918)
+2516: Hierarchical Storage in Information Retrieval (2.511626)
+2795: Sentence Paraphrasing from a Conceptual Base (2.315736)
+2990: Effective Information Retrieval Using Term Accuracy (2.257058)
+2451: Design of Tree Structures for Efficient Querying (2.0976045)
+
+**Results found: 15**
+
+### 3.5 Tuning the Lucene Score
+
+#### Show the top 10 results (with scores) of both similiraty functions. Describe the effect of using the new parameters.
+
+------
+
+**ClassicSimilarity**
+
+*Searching for [compiler program]*
+3189: An Algebraic Compiler for the FORTRAN Assembly Program (1.4853004)
+1215: Some Techniques Used in the ALCOR ILLINOIS 7090 (1.40438)
+1183: A Note on the Use of a Digital Computerfor Doing Tedious Algebra and Programming (1.3361712)
+1459: Requirements for Real-Time Languages (1.3162413)
+718: An Experiment in Automatic Verification of Programs (1.3136772)
+1122: A Note on Some Compiling Algorithms (1.3136772)
+1465: Program Translation Viewed as a General Data Processing Problem (1.2863079)
+2652: Reduction of Compilation Costs Through Language Contraction (1.2732332)
+1988: A Formalism for Translator Interactions (1.2580339)
+46: Multiprogramming STRETCH: Feasibility Considerations (1.2391106)
+
+**Results found: 578**
+
+------
+
+**MySimilarity**
+
+*Searching for [compiler program]*
+2923: High-Level Data Flow Analysis (13.265991)
+2534: Design and Implementation of a Diagnostic Compiler for PL/I (13.243084)
+637: A NELIAC-Generated 7090-1401 Compiler (12.414103)
+1647: WATFOR-The University of Waterloo FORTRAN IV Compiler (12.195253)
+2652: Reduction of Compilation Costs Through Language Contraction (10.961201)
+1465: Program Translation Viewed as a General Data Processing Problem (9.89246)
+1988: A Formalism for Translator Interactions (9.89246)
+3189: An Algebraic Compiler for the FORTRAN Assembly Program (9.89246)
+1135: A General Business-Oriented Language Based on Decision Expressions* (9.839054)
+1237: Conversion of Decision Tables To Computer Programs (9.839054)
+
+**Results found: 578**
+
+------
+
+```java
+package ch.heigvd.iict.dmg.labo1.similarities;
+
+import org.apache.lucene.search.similarities.ClassicSimilarity;
+
+public class MySimilarity extends ClassicSimilarity {
+    // Implement the functions described in section "Tuning the Lucene Score"
+
+    @Override
+    public float tf(float freq) {
+        return (float) (1 + Math.log(freq));
+    }
+
+    @Override
+    public float idf(long docFreq, long docCount) {
+        return (float) (Math.log((double) docCount / (docFreq + 1)) + 1);
+    }
+
+    @Override
+    public float lengthNorm(int numTerms) {
+        return 1;
+    }
+
+
+}
+
+```
+
+We can clearly see that we have different order by using another class of comparison. the score is smaller with the classical than with MySimilarity.

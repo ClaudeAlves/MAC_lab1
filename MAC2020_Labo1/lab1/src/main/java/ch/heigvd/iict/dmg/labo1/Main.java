@@ -10,6 +10,7 @@ import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.shingle.ShingleAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 
 import java.nio.file.FileSystems;
@@ -22,8 +23,8 @@ public class Main {
 		// 1.1. create an analyzer
 		Analyzer analyser = getAnalyzer();
 
-		// TODO student "Tuning the Lucene Score"
-//		Similarity similarity = null;//new MySimilarity();
+
+//		Similarity similarity = new ClassicSimilarity();
 		Similarity similarity = new MySimilarity();
 
 		long before = System.currentTimeMillis();
@@ -54,14 +55,14 @@ public class Main {
 
 	private static void searching(QueriesPerformer queriesPerformer) {
 		// Example
-		//queriesPerformer.query("compiler program");
+		queriesPerformer.query("compiler program");
 
-		// TODO student
-         queriesPerformer.query("\"Information Retrieval\"");
-		 queriesPerformer.query("Information AND Retrieval");
-		 queriesPerformer.query("(+Information Retrieval) NOT Database");
-		 queriesPerformer.query("Info*");
-		 queriesPerformer.query("\"Information Retrieval\"~5");
+
+//         queriesPerformer.query("\"Information Retrieval\"");
+//		 queriesPerformer.query("Information AND Retrieval");
+//		 queriesPerformer.query("(+Information Retrieval) NOT Database");
+//		 queriesPerformer.query("Info*");
+//		 queriesPerformer.query("\"Information Retrieval\"~5");
         // and so on for all the queries asked on the instructions...
         //
 		// Reminder: it must print the total number of results and
@@ -69,7 +70,7 @@ public class Main {
 	}
 
 	private static Analyzer getAnalyzer() {
-	    // TODO student... For the part "Indexing and Searching CACM collection
+	    // student... For the part "Indexing and Searching CACM collection
 		// - Indexing" use, as indicated in the instructions,
 		// the StandardAnalyzer class.
 		//
@@ -88,7 +89,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		return analyzer; // TODO student DONE?
+		return analyzer;
 	}
 
 }
