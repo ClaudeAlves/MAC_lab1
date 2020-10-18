@@ -55,7 +55,7 @@ public class CACMIndexer implements ParserListener {
         // DONE ?
         // id
         if (id != null) {
-            doc.add(new LongPoint("id", id));
+            doc.add(new StringField("id", id.toString(), Field.Store.YES ));
         }
         String[] authorsSplit = authors.split(";");
         // split the authors

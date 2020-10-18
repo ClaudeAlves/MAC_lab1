@@ -1,3 +1,7 @@
+---
+
+---
+
 # MAC LABO 1 
 
 ## Indexing and Search with Apache Lucene
@@ -223,4 +227,137 @@
    | 9     | us        | 123           | 123             |
    | 10    | data      | 110           | 112             |
 
+   ```java
+   public void printTopRankingTerms(String field, int numTerms) {
+           // This methods print the top ranking term for a field.
+           // See "Reading Index".
    
+           TermStats[] termsTop;
+           try {
+               termsTop = HighFreqTerms.getHighFreqTerms(indexReader, numTerms, field, new HighFreqTerms.TotalTermFreqComparator());
+           } catch (Exception e) {
+               e.printStackTrace();
+               return;
+           }
+   
+           System.out.println("Top ranking terms for field [" + field + "] are: ");
+           for (TermStats ts : termsTop) {
+               System.out.println("\t" + ts);
+           }
+       }
+   ```
+
+   ### 3.4 Searching
+
+   ```java
+   public void query(String q) {
+   
+           // See "Searching" section
+           QueryParser queryParser = new QueryParser("summary", analyzer);
+           Query query = null;
+           try {
+               query = queryParser.parse(q);
+           } catch (ParseException e) {
+               e.printStackTrace();
+           }
+   
+           System.out.println("Searching for [" + q + "]");
+   
+           try {
+               // search query
+               ScoreDoc[] hits = indexSearcher.search(query, 1000).scoreDocs;
+               // retrieve results
+               for (ScoreDoc hit : hits) {
+                   Document doc = indexSearcher.doc(hit.doc);
+                   System.out.println(doc.get("id") + ": " + doc.get("title") + " (" +
+                           hit.score + ")");
+               }
+               System.out.println("Results found: " + hits.length);
+               System.out.println();
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+   
+   
+       }
+   ```
+
+   #### 1. Publications containing the term “Information Retrieval”
+
+   *Searching for ["Information Retrieval"]*
+   1935: Randomized Binary Search Technique (1.529259)
+   891: Everyman's Information Retrieval System (1.4450139)
+   1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (1.4450139)
+   1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (1.2743825)
+   2519: On the Problem of Communicating Complex Information (1.1527222)
+   2516: Hierarchical Storage in Information Retrieval (0.9871324)
+   2307: Dynamic Document Processing (0.92724943)
+   2795: Sentence Paraphrasing from a Conceptual Base (0.9011245)
+   2990: Effective Information Retrieval Using Term Accuracy (0.87709016)
+   2451: Design of Tree Structures for Efficient Querying (0.81509775)
+
+   **Results found: 11**
+
+   #### 2. Publications containing both “Information” and “Retrieval”.
+
+   *Searching for [Information AND Retrieval]*
+   1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (1.7697731)
+   891: Everyman's Information Retrieval System (1.6287744)
+   3134: The Use of Normal Multiplication Tablesfor Information Storage and Retrieval (1.5548403)
+   1935: Randomized Binary Search Technique (1.5292588)
+   2307: Dynamic Document Processing (1.4392829)
+   1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (1.436444)
+   1032: Theoretical Considerations in Information Retrieval Systems (1.4117906)
+   2519: On the Problem of Communicating Complex Information (1.3600239)
+   1681: Easy English,a Language for InformationRetrieval Through a Remote Typewriter Console (1.3113353)
+   2990: Effective Information Retrieval Using Term Accuracy (1.2403991)
+
+   **Results found: 23**
+
+   #### 3. Publications containing at least the term “Retrieval” and, possibly “Information” but not “Database”.
+
+   *Searching for [(+Information Retrieval) NOT Database]*
+   1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (1.7697731)
+   891: Everyman's Information Retrieval System (1.6287744)
+   3134: The Use of Normal Multiplication Tablesfor Information Storage and Retrieval (1.5548403)
+   1935: Randomized Binary Search Technique (1.5292588)
+   2307: Dynamic Document Processing (1.4392829)
+   1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (1.436444)
+   1032: Theoretical Considerations in Information Retrieval Systems (1.4117906)
+   2519: On the Problem of Communicating Complex Information (1.3600239)
+   1681: Easy English,a Language for InformationRetrieval Through a Remote Typewriter Console (1.3113353)
+   2990: Effective Information Retrieval Using Term Accuracy (1.2403991)
+
+   **Results found: 149**
+
+   #### 4. Publications containing a term starting with “Info”.
+
+   *Searching for [Info\*]*
+   222: Coding Isomorphisms (1.0)
+   272: A Storage Allocation Scheme for ALGOL 60 (1.0)
+   396: Automation of Program  Debugging (1.0)
+   397: A Card Format for Reference Files in Information Processing (1.0)
+   409: CL-1, An Environment for a Compiler (1.0)
+   440: Record Linkage (1.0)
+   483: On the Nonexistence of a Phrase Structure Grammar for ALGOL 60 (1.0)
+   616: An Information Algebra - Phase I Report-LanguageStructure Group of the CODASYL Development Committee (1.0)
+   644: A String Language for Symbol Manipulation Based on ALGOL 60 (1.0)
+   655: COMIT as an IR Language (1.0)
+
+   **Results found: 193**
+
+   #### 5. Publications containing the term “Information” close to “Retrieval” (max distance 5).
+
+   *Searching for ["Information Retrieval"~5]*
+   1935: Randomized Binary Search Technique (1.529259)
+   891: Everyman's Information Retrieval System (1.4450139)
+   1457: Data Manipulation and Programming Problemsin Automatic Information Retrieval (1.4450139)
+   1699: Experimental Evaluation of InformationRetrieval Through a Teletypewriter (1.2743825)
+   2519: On the Problem of Communicating Complex Information (1.1527222)
+   2307: Dynamic Document Processing (1.135644)
+   2516: Hierarchical Storage in Information Retrieval (0.9871324)
+   2795: Sentence Paraphrasing from a Conceptual Base (0.9011245)
+   2990: Effective Information Retrieval Using Term Accuracy (0.87709016)
+   2451: Design of Tree Structures for Efficient Querying (0.81509775)
+
+   **Results found: 15**

@@ -43,7 +43,6 @@ public class QueriesPerformer {
     }
 
     public void printTopRankingTerms(String field, int numTerms) {
-        // TODO student
         // This methods print the top ranking term for a field.
         // See "Reading Index".
 
@@ -62,7 +61,7 @@ public class QueriesPerformer {
     }
 
     public void query(String q) {
-        // TODO student
+
         // See "Searching" section
         QueryParser queryParser = new QueryParser("summary", analyzer);
         Query query = null;
@@ -75,15 +74,16 @@ public class QueriesPerformer {
         System.out.println("Searching for [" + q + "]");
 
         try {
-            // 3.3. search query
+            // search query
             ScoreDoc[] hits = indexSearcher.search(query, 1000).scoreDocs;
-            // 3.4. retrieve results
-            System.out.println("Results found: " + hits.length);
+            // retrieve results
             for (ScoreDoc hit : hits) {
                 Document doc = indexSearcher.doc(hit.doc);
                 System.out.println(doc.get("id") + ": " + doc.get("title") + " (" +
                         hit.score + ")");
             }
+            System.out.println("Results found: " + hits.length);
+            System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
         }
