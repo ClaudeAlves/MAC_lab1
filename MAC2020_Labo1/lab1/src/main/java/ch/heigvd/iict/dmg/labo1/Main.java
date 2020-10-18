@@ -74,18 +74,18 @@ public class Main {
 		// and return the appropriate Analyzers asked.
 		//StandardAnalyzer analyzer = new StandardAnalyzer();
 		//WhitespaceAnalyzer analyzer = new WhitespaceAnalyzer();
-		//EnglishAnalyzer analyzer = new EnglishAnalyzer();
+		EnglishAnalyzer analyzer = new EnglishAnalyzer();
 		//ShingleAnalyzerWrapper analyzer = new ShingleAnalyzerWrapper(2,2);
 		//ShingleAnalyzerWrapper analyzer = new ShingleAnalyzerWrapper(2,3);
 
 		Path path = FileSystems.getDefault().getPath("common_words.txt");
 		try {
-			 return new StopAnalyzer(path);
+			 //return new StopAnalyzer(path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return null; // TODO student DONE?
+		return analyzer; // TODO student DONE?
 	}
 
 }
